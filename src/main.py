@@ -2,6 +2,8 @@
 # It shows what percentage of the days those habits where followed in the current month as well as in the current year.
 
 from datetime import datetime
+import json
+
 import os
 
 def clear():
@@ -10,10 +12,13 @@ def clear():
 # Call it whenever you need
 clear()
 
-# Creating a class for the user creation.
-class NewUser:
+USERS_FILE = "users.json"
+HABITS_FILE = "habits.json"
+
+# Creating a class for the user.
+class User:
     def __init__(self, username, password, name, email):
-        self.username = username
+        self.username = username.split()
         self.password = password
         self.name = name
         self.email = email
@@ -38,24 +43,25 @@ class Task:
         self.name = name
         self.time = time
 
+def load_json_file(file_path):
+    """Safely loads a JSON file or returns an empty list if it doesn't exist."""
+
 def create_account():
     username = input("Please enter your username! (At least 6 digits) ")
     password = input("Please enter your password! (At least 6 digits) ")
     name = input("Please enter your name! (ex. John Doe) ")
     email = input("Please enter your email! (ex. johndoe@gmail.com) ")
 
-    newUser = NewUser(username, password, name, email)
+    newUser = User(username, password, name, email)
     if(newUser.check_input()):
-        print("Your account has been created. Please sign in!")
         store_new_account(newUser)
+        print("Your account has been created. Please sign in!")
         input()
     else:
         print("Please try again with the updated information!")
         input()
 
 def store_new_account(newUser):
-    print(newUser)
-    print("New account has been stored!")
     pass
 
 program_running = True
