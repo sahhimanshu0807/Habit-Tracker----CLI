@@ -39,9 +39,8 @@ class User:
         return True
 
 class Task:
-    def __init__(self, name, time):
-        self.name = name
-        self.time = time
+    def __init__(self):
+        pass
 
 def load_json_file(file_path):
     """Safely loads a JSON file or returns an empty list if it doesn't exist."""
@@ -66,8 +65,13 @@ def create_account():
     password = input("Please enter your password! (At least 6 digits) ")
     name = input("Please enter your name! (ex. John Doe) ")
     email = input("Please enter your email! (ex. johndoe@gmail.com) ")
-
+    users = load_json_file(USERS_FILE)
+    if any(user["username"] == username for user in users):
+        print("The provided username is already taken. Please select a different username!")
+        input()
+        return
     newUser = User(username, password, name, email)
+    
     if(newUser.check_input()):
         if(store_new_account(newUser)):
             print("Your account has been created. Please sign in!")
@@ -92,7 +96,29 @@ def store_new_account(newUser):
         return False
     pass
 
+def login():
+    username = input("Please enter your username! ")
+    password = input("Please enter your password! ")
+
+    users = load_json_file(USERS_FILE)
+
+
+    for user in users:
+        if(user["username"] == username and user["password"] == password):
+            logged_in = True
+            logged_in_user = User(user["username"], user["password"], user["name"], user["email"])
+            print("Congratulations! Login is successfull")
+            load_main_page(logged_in_user)
+            return
+    logged_in = False
+    print("No User found or your password didn't match. Please try again or create an account!")
+    input()
+
+def load_main_page(user):
+    pass
+    
 program_running = True
+logged_in = False
         
 while(program_running == True):
     print(f"Welcome to the habit tracker!")
@@ -102,6 +128,7 @@ while(program_running == True):
     print(f"3. Exit.")
     option1 = int(input("Enter your choice(1-3) "))
     if(option1 == 1):
+        login()
         pass
     elif(option1 == 2):
         create_account()

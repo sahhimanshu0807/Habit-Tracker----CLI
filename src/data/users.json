@@ -16,5 +16,11 @@
         "password": "helloworld",
         "name": "hello world",
         "email": "hello@world.com"
+    },
+    {
+        "username": "hjshdjshdjs",
+        "password": "jskdjskdjs",
+        "name": "jksdjskdjs",
+        "email": "jksjdksjdks@jskdjs.com"
     }
 ]
