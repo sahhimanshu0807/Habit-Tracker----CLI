@@ -12,13 +12,13 @@ def clear():
 # Call it whenever you need
 clear()
 
-USERS_FILE = "users.json"
-HABITS_FILE = "habits.json"
+USERS_FILE = "src/data/users.json"
+HABITS_FILE = "src/data/habits.json"
 
 # Creating a class for the user.
 class User:
     def __init__(self, username, password, name, email):
-        self.username = username.split()
+        self.username = username.strip()
         self.password = password
         self.name = name
         self.email = email
@@ -45,6 +45,21 @@ class Task:
 
 def load_json_file(file_path):
     """Safely loads a JSON file or returns an empty list if it doesn't exist."""
+    if(os.path.exists(file_path)):
+        try:
+            with open(file_path, 'r', encoding='UTF-8') as file:
+                return json.load(file)
+        except json.JSONDecodeError:
+            print(f"Warning: {file_path} was corrupted. Starting fresh.")
+            return []
+        return []
+    
+def save_json_file(file_path, data):
+    """Saves a Python data structure directly to a JSON file."""
+    with open(file_path, "w", encoding="utf-8") as file:
+        json.dump(data, file, indent=4)
+        return True
+    return False
 
 def create_account():
     username = input("Please enter your username! (At least 6 digits) ")
@@ -54,14 +69,27 @@ def create_account():
 
     newUser = User(username, password, name, email)
     if(newUser.check_input()):
-        store_new_account(newUser)
-        print("Your account has been created. Please sign in!")
+        if(store_new_account(newUser)):
+            print("Your account has been created. Please sign in!")
+        else:
+            print("Data storage issue")
         input()
     else:
         print("Please try again with the updated information!")
         input()
 
 def store_new_account(newUser):
+    users = load_json_file(USERS_FILE)
+    users.append({
+        "username": newUser.username,
+        "password": newUser.password,
+        "name": newUser.name,
+        "email": newUser.email
+    })
+    if(save_json_file(USERS_FILE, users)):
+        return True
+    else:
+        return False
     pass
 
 program_running = True
