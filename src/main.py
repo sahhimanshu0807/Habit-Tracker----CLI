@@ -3,6 +3,7 @@
 
 from datetime import datetime
 import json
+from tabulate import tabulate
 
 import os
 
@@ -38,9 +39,14 @@ class User:
             return False
         return True
 
+# Creating a task with weekly streak
 class Task:
-    def __init__(self):
-        pass
+    def __init__(self, username, name, description, weeklystreak):
+        self.username = username
+        self.name = name
+        self.description = description
+        self.weeklystreak = weeklystreak
+
 
 def load_json_file(file_path):
     """Safely loads a JSON file or returns an empty list if it doesn't exist."""
@@ -115,8 +121,19 @@ def login():
     input()
 
 def load_main_page(user):
-    pass
-    
+    print("Day starts on Monday. try to add the new habit on monday to get a better weekly streak!")
+    habits = load_json_file(HABITS_FILE)
+    data = []
+    for habit in habits:
+        data1 = []
+        data1.append(habit["password"])
+        data1.append(habit["name"])
+        data1.append(habit["email"])
+        data.append(data1)
+    headers = ["Name", "Description", "This Week Streak!"]
+    print("Your current habits streak: ")
+    print(tabulate(data, headers=headers, tablefmt="fancy_grid"))
+
 program_running = True
 logged_in = False
         
